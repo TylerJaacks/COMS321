@@ -1,0 +1,75 @@
+main:
+  ADDI X10, XZR, #512
+  ADD X11, XZR, XZR
+start_init:
+  SUB X12, X10, XZR
+  CBZ X12, end_init
+  STUR X10, [X11, #0]
+  SUBI X10, X10, #1
+  ADDI X11, X11, #8
+  B start_init
+end_init:
+  ADD X0, XZR, XZR                 // set up call
+  PRNT X0
+  ADDI X1, XZR, #512
+  BL selection_sort
+  B done
+// foo
+swap:
+  LDUR X9, [X0, #0]                // load *a
+  LDUR X10, [X1, #0]               // load *b
+  STUR X10, [X0, #0]               // store *b into a
+  STUR X9, [X1, #0]                // store *a into b
+  BR LR
+
+find_smallest:
+  ADD X9, XZR, XZR                 // smallest_index = 0
+  ADDI X10, XZR, #1                // i = 1
+smallest_loop:
+  SUBS X11, X10, X1                // temporary
+  B.EQ end_smallest_loop
+  LSL X12, X9, #3
+  ADD X12, X12, X0                 // a + smallest_index
+  LSL X13, X10, #3
+  ADD X13, X13, X0                 // a + i
+  LDUR X14, [X12, #0]              // a[smallest_index]
+  LDUR X15, [X13, #0]              // a[i]
+  SUBS X11, X15, X14
+  B.GE no_adjustment
+  ADD X9, XZR, X10
+no_adjustment:
+  ADDI X10, X10, #1                // i++
+  B smallest_loop
+end_smallest_loop:
+  ADD X0, XZR, X9
+  BR LR
+
+selection_sort:
+  SUBI SP, SP, #24
+  STUR LR, [SP, #0]
+  STUR X0, [SP, #8]                // a
+  STUR X1, [SP, #16]               // n
+  ADD X19, XZR, XZR                // i = 0
+  SUBI X20, X1, #1                 // n - 1
+selection_loop:
+  SUBS X9, X19, X20                // i - (n - 1)
+  B.EQ end_selection_loop          // break if i == (n - 1)
+  LSL X9, X19, #3                  // X9 = i * 8
+  ADD X0, X0, X9                   // calculate a + i
+  ADD X21, X0, XZR                 // save a + i
+  SUB X1, X1, X19                  // n - i
+  BL find_smallest
+  LSL X0, X0, #3                   // index of smallest times 8
+  ADD X1, X21, X0
+  ADD X0, X21, XZR
+  BL swap
+  LDUR X1, [SP, #16]
+  LDUR X0, [SP, #8]
+  ADDI X19, X19, #1                // i++
+  B selection_loop
+end_selection_loop:
+  LDUR LR, [SP, #0]
+  ADDI SP, SP, #24
+  BR LR
+done:
+  DUMP
