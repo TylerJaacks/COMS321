@@ -1,0 +1,33 @@
+Main:
+    // int *addr = 0x00000;
+    ADDI X0, XZR, #0
+    // int size = 5;
+    ADDI X1, XZR, #5
+    // int pos = 3;
+    ADDI X2, XZR, #3
+    // int final = 1;
+    ADDI X3, XZR, #1
+    // ShiftRight(addr, pos, final)
+    BL ShiftRight
+
+// X0 -> Array Starting Address.
+// X1 -> Size of Array.
+// X2 -> Position of the Item.
+// X3 -> Final Position.
+//
+// ShiftRight(addr, pos, final):
+//  for i from final - 1 to pos:
+//    addr[i + 1] = addr[i]
+ShiftRight:
+    // int i = final - 1;
+    SUBI X10, X3, #1          
+ShiftRightLoop:
+    // for (i; i > pos; i--)
+    
+    // i--;
+    SUBI X10, X10, #1
+ShiftRightLoopEnd:
+    BR LR
+
+Done:
+  DUMP
