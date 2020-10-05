@@ -1,33 +1,58 @@
 Main:
-    // int *addr = 0x00000;
-    ADDI X0, XZR, #0
+    // int *addr = 0X190000;
+    ADDI X19, XZR, #0
     // int size = 5;
-    ADDI X1, XZR, #5
-    // int pos = 3;
-    ADDI X2, XZR, #3
+    ADDI X20, XZR, #4
+    // int pos = 0;
+    ADDI X21, XZR, #0
     // int final = 1;
-    ADDI X3, XZR, #1
+    ADDI X22, XZR, #1
+
+    // a[0] = 2;
+    ADDI X9, XZR, #2
+    STUR X9, [X19, #0]
+    // a[1] = 3;
+    ADDI X9, XZR, #3
+    STUR X9, [X19, #8]
+    // a[2] = 1;
+    ADDI X9, XZR, #1
+    STUR X9, [X19, #16]
+    // a[3] = 5; 
+    ADDI X9, XZR, #5
+    STUR X9, [X19, #24]
+
     // ShiftRight(addr, pos, final)
     BL ShiftRight
+    B Done
 
-// X0 -> Array Starting Address.
-// X1 -> Size of Array.
-// X2 -> Position of the Item.
-// X3 -> Final Position.
+// X19 -> Array Starting Address.
+// X20 -> Size of Array.
+// X21 -> Position of the Item.
+// X22 -> Final Position.
 //
 // ShiftRight(addr, pos, final):
 //  for i from final - 1 to pos:
 //    addr[i + 1] = addr[i]
 ShiftRight:
     // int i = final - 1;
-    SUBI X10, X3, #1          
-ShiftRightLoop:
-    // for (i; i > pos; i--)
-    
-    // i--;
-    SUBI X10, X10, #1
-ShiftRightLoopEnd:
-    BR LR
+    SUBI X23, X22, #1
 
+    // for (i; i > pos; i--)
+    // x = i - pos
+    // if i > pos, x is positive.
+    // if i < pos, x is negative.
+    SUBS X9, X23, X21
+
+    // i--;
+    SUBI X23, X23, #1
+    
+    B.EQ ShiftRightLoop
+    B.GT ShiftRightLoopEnd          
+ShiftRightLoop:
+    PRNT X11
+    BL ShiftRight
+ShiftRightLoopEnd:
+    PRNT X12
+    BR LR
 Done:
-  DUMP
+  PRNT X20
