@@ -1,0 +1,37 @@
+Main:
+    // int *addr = 0x00000;
+    ADDI X19, XZR, #0
+    // int pos = 0;
+    ADDI X20, XZR, #0
+    // int final = 4;
+    ADDI X21, XZR, #4
+
+    // a[0] = 2;
+    ADDI X9, XZR, #2
+    STUR X9, [X19, #0]
+    // a[1] = 3;
+    ADDI X9, XZR, #3
+    STUR X9, [X19, #8]
+    // a[2] = 1;
+    ADDI X9, XZR, #1
+    STUR X9, [X19, #16]
+    // a[3] = 5; 
+    ADDI X9, XZR, #5
+    STUR X9, [X19, #24]
+
+    // InsertSortedPos(addr, pos, final)
+    BL InsertSortedPos
+    B Done
+
+// addr -> X19, pos -> X20, and final -> X21
+// InsertSortedPos(addr, pos, final):
+//   v = addr[pos]
+//   p = FindSortedPos(addr, v, final)
+//   ShiftRight(addr, p, pos)
+//   addr(p) = v
+InsertSortedPos:
+    PRNT X19
+    PRNT X20
+    PRNT X21
+Done:
+    DUMP

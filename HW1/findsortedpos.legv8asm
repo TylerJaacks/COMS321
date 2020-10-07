@@ -16,21 +16,15 @@ Main:
     ADDI X9, XZR, #3
     STUR X9, [X19, #16]
     // a[3] = 4; 
-    ADDI X9, XZR, #4
+    ADDI X9, XZR, #4s
     STUR X9, [X19, #24]
 
     // FindSortedPos(addr, val, final)
     BL FindSortedPos
     B Done
 
-// Find sorted position: This procedure takes three parameters,
-// the address of an array of sorted ints, a value, and the index
-// of the last element in the array.  It searches the array for 
-// the sorted position of the value and returns that index.
-//
 // addr -> X19, val -> X20, and final -> X21, and return -> X22
-//
-// FindSortedPos(addr, val, final):
+// FindSortedPos(addr, val, final)
 //  for i from 0 to final
 //    if addr[i] >= val
 //      break
@@ -41,20 +35,11 @@ FindSortedPos:
 FindSortedPosLoop:
     SUBS X9, X22, X21
 
-//   B.EQ FindSortedPosLoopDone          // break if i == (n - 1)
-//   LSL X9, X19, #3                  // X9 = i * 8
-//   ADD X0, X0, X9                   // calculate a + i
-//   ADD X21, X0, XZR                 // save a + i
-//   SUB X1, X1, X19                  // n - i
-//   BL find_smallest
-//   LSL X0, X0, #3                   // index of smallest times 8
-//   ADD X1, X21, X0
-//   ADD X0, X21, XZR
-//   BL swap
-//   LDUR X1, [SP, #16]
-//   LDUR X0, [SP, #8]
+    // TODO there is an infinite loop here.
+    // for i from 0 to final
+    B.GE FindSortedPosLoopDone
 
-    PRNT X22
+    // if addr[i] >= val
 
     // i++;
     ADDI X22, X19, #1

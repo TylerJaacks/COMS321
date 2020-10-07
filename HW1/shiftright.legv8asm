@@ -24,7 +24,6 @@ Main:
     // ShiftRight(addr, pos, final)
     BL ShiftRight
     B Done
-
 // X19 -> Array Starting Address.
 // X20 -> Size of Array.
 // X21 -> Position of the Item.
@@ -42,14 +41,16 @@ ShiftRight:
     // if i > pos, x is positive.
     // if i < pos, x is negative.
     SUBS X9, X23, X21
-
-    // i--;
-    SUBI X23, X23, #1
     
+    // TODO there is an infinite loop here.
     B.EQ ShiftRightLoop
     B.GT ShiftRightLoopEnd          
 ShiftRightLoop:
     PRNT X11
+    
+    // i--;
+    SUBI X23, X23, #1
+
     BL ShiftRight
 ShiftRightLoopEnd:
     PRNT X12
