@@ -1,0 +1,58 @@
+// X19 -> Array Starting Address.
+// X20 -> Size of Array.
+// X21 -> Position of the Item.
+// X22 -> Final Position.
+//
+// ShiftRight(addr, pos, final):
+//  for i from final - 1 to pos:
+//    addr[i + 1] = addr[i]
+ShiftRight:
+    // int i = final - 1;
+    SUBI X23, X22, #1
+
+    // for (i; i > pos; i--)
+    ShiftRightLoop:
+        SUBS XZR, X21, X23
+        B.GT Done
+
+        SUBS XZR, 
+
+        // X10 = i * 8
+        LSL X10, X23, #3
+        // X10 = X19 + X10
+        ADD X10, X19, X10
+
+        // TODO Not Working!
+        // int tmp = a[i];
+        LDUR X9, [X10, #0]
+        // a[i + 1] = tmp
+        STUR X9, [X10, #8]
+
+        // i--;
+        SUBI X23, X23, #1
+
+        B ShiftRightLoop
+// addr -> X19, val -> X20, and final -> X21, and return -> X22
+// FindSortedPos(addr, val, final)
+//  for i from 0 to final
+//    if addr[i] >= val
+//      break
+//  return i
+FindSortedPos:
+    // int i = 0;
+    ADD X23, XZR, XZR
+
+    // for (i = 0; i < final; i++)
+    FindSortedPosLoop:
+        LSL X10, X23, #3
+        ADD X10, X19, X10
+
+        // X12 = a[i]
+        LDUR X12, [X10, #0]
+
+        SUBS XZR, X12, X20
+        B.GE Done
+
+        ADDI X23, X23, #1
+
+        B FindSortedPosLoop

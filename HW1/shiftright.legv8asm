@@ -32,45 +32,30 @@ Main:
 //  for i from final - 1 to pos:
 //    addr[i + 1] = addr[i]
 ShiftRight:
-    // int i = final - 1;
-    SUBI X23, X22, #1
+// int i = final - 1;
+SUBI X23, X22, #1
 
-    // for (i; i > pos; i--)
-    ShiftRightLoop:
-        SUBS XZR, X21, X23
-        B.GT Done
-        
-        // (i * 8)
-        LSL X10, X23, #3
-        // (addr * 8)
-        LSL X11, X19, #3
-        // (addr * 8) + (i * 8)
-        ADD X11, X11, X10
+// for (i; i > pos; i--)
+ShiftRightLoop:
+    SUBS XZR, X21, X23
+    B.GT Done
 
-        // int tmp = addr[i];
-        LDUR X12, [X11, #0]
+    SUBS XZR, 
 
-        // i + 1
-        ADDI X13, X23, #1
-        // [(i + 1) * 8]
-        LSL X13, X13, #3
-        // (addr * 8)
-        LSL X11, X19, #3
-        // [(i + 1) * 8] + (addr * 8)
-        ADD X15, X13, X11
+    // X10 = i * 8
+    LSL X10, X23, #3
+    // X10 = X19 + X10
+    ADD X10, X19, X10
 
-        LDUR X16, [X15, #0]
-        PRNT X16
+    // TODO Not Working!
+    // int tmp = a[i];
+    LDUR X9, [X10, #0]
+    // a[i + 1] = tmp
+    STUR X9, [X10, #8]
 
-        // addr[i + 1] = tmp;
-        STUR X12, [X15, #0]
+    // i--;
+    SUBI X23, X23, #1
 
-        LDUR X16, [X15, #0]
-        PRNT X16
-
-        // i--;
-        SUBI X23, X23, #1
-
-        B ShiftRightLoop
+    B ShiftRightLoop
 Done:
   DUMP
