@@ -1,12 +1,12 @@
 Main:
-    // int *addr = 0X190000;
+    // int *addr = 0x00000;
     ADDI X19, XZR, #0
-    // int size = 5;
+    // int size = 4;
     ADDI X20, XZR, #4
-    // int pos = 0;
-    ADDI X21, XZR, #0
-    // int final = 1;
-    ADDI X22, XZR, #1
+    // int pos = 1;
+    ADDI X21, XZR, #1
+    // int final = 4;
+    ADDI X22, XZR, #4
 
     // a[0] = 2;
     ADDI X9, XZR, #2
@@ -22,8 +22,7 @@ Main:
     STUR X9, [X19, #24]
 
     // ShiftRight(addr, pos, final)
-    BL ShiftRight
-    B Done
+    B ShiftRight
 // X19 -> Array Starting Address.
 // X20 -> Size of Array.
 // X21 -> Position of the Item.
@@ -37,23 +36,41 @@ ShiftRight:
     SUBI X23, X22, #1
 
     // for (i; i > pos; i--)
-    // x = i - pos
-    // if i > pos, x is positive.
-    // if i < pos, x is negative.
-    SUBS X9, X23, X21
-    
-    // TODO there is an infinite loop here.
-    B.EQ ShiftRightLoop
-    B.GT ShiftRightLoopEnd          
-ShiftRightLoop:
-    PRNT X11
-    
-    // i--;
-    SUBI X23, X23, #1
+    ShiftRightLoop:
+        SUBS XZR, X21, X23
+        B.GT Done
+        
+        // (i * 8)
+        LSL X10, X23, #3
+        // (addr * 8)
+        LSL X11, X19, #3
+        // (addr * 8) + (i * 8)
+        ADD X11, X11, X10
 
-    BL ShiftRight
-ShiftRightLoopEnd:
-    PRNT X12
-    BR LR
+        // int tmp = addr[i];
+        LDUR X12, [X11, #0]
+
+        // i + 1
+        ADDI X13, X23, #1
+        // [(i + 1) * 8]
+        LSL X13, X13, #3
+        // (addr * 8)
+        LSL X11, X19, #3
+        // [(i + 1) * 8] + (addr * 8)
+        ADD X15, X13, X11
+
+        LDUR X16, [X15, #0]
+        PRNT X16
+
+        // addr[i + 1] = tmp;
+        STUR X12, [X15, #0]
+
+        LDUR X16, [X15, #0]
+        PRNT X16
+
+        // i--;
+        SUBI X23, X23, #1
+
+        B ShiftRightLoop
 Done:
-  PRNT X20
+  DUMP
