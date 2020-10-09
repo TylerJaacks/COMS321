@@ -1,0 +1,22 @@
+Main:
+    SUBI SP, SP, #32
+
+    STUR X0, [SP, #0]
+    STUR X1, [SP, #8]
+    STUR X2, [SP, #16]
+    STUR LR, [SP, #24]
+    BL Function
+    LDUR LR, [SP, #24]
+    LDUR X2, [SP, #16]
+    LDUR X1, [SP, #8]
+    LDUR X0, [SP, #0]
+    
+    ADDI SP, SP, #32
+    BR LR    
+
+// param1 = X1
+// param2 = X2
+// param3 = X3
+// return X20
+Function:
+    // X1 = X1 + X1
