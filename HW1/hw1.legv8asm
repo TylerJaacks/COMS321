@@ -1,0 +1,127 @@
+// int main(int argc, char* argv[])
+Main:
+    // int addr = 0;
+    ADDI X0, XZR, #0
+    // int length = 4
+    ADDI X1, XZR, #4
+
+    ADDI X9, XZR, #5
+    STUR X9, [X19, #0]
+    ADDI X9, XZR, #4
+    STUR X9, [X19, #8]
+    ADDI X9, XZR, #3
+    STUR X9, [X19, #16]
+    ADDI X9, XZR, #2
+    STUR X9, [X19, #24]
+
+    SUBI SP, SP, #512
+
+    // addr
+    STUR X0, [SP, #0]
+    // length
+    STUR X1, [SP, #8]
+    STUR LR, [SP, #16]
+    BL InsertionSort
+    LDUR LR, [SP, #16]
+    LDUR X1, [SP, #8]
+    LDUR X0, [SP, #0]
+    
+    ADDI SP, SP, #512 
+    B Exit
+// addr -> X0
+// length -> X1
+InsertionSort:
+    // int i = 0;
+    ADDI X23, XZR, #1
+    
+    // for (i = 1; i < length - 1; i++)
+    InsertionSortLoop:
+        // int k = lenght - 1;
+        SUBI X10, X1, #1
+        
+        SUBS XZR, X23, X10
+        B.GT InsertionSortDone
+
+        // TODO InsertSortedPos(addr, i, length-1)
+        STUR X23, [SP, #32]
+        STUR X10, [SP, #64]
+        STUR LR, [SP, #128]
+        BL InsertSortedPos
+        LDUR LR, [SP, #128]
+        LDUR X10, [SP, #64]
+        LDUR X23, [SP, #32]
+
+        // i++;
+        ADDI X23, X23, #1
+
+        B InsertionSortLoop
+InsertionSortDone:
+    BR LR
+// X2 -> addr
+// X23 -> i
+// X10 -> length - 1
+InsertSortedPos:
+    // v = addr[pos]
+    // LSL X10, X20, #3
+    // ADD X10, X19, X20
+    // LDUR X11, [X10, #0]
+
+    // p = FindSortedPos(addr, v, final)
+    // ShiftRight(addr, p, pos)
+    // addr(p) = v
+
+    BR LR
+// X19 -> Array Starting Address.
+// X20 -> Size of Array.
+// X21 -> Position of the Item.
+// X22 -> Final Position.
+ShiftRight:
+    // int i = final - 1;
+    SUBI X23, X22, #1
+
+    // X11 = a[final - 1]
+    LSL X11, X23, #3
+    LDUR X11, [X11, #0]
+
+ShiftRightLoop:
+    // XZR = X21 - X23
+    // XZR = pos - (final - 1)
+    // XZR = 1 - (4 - 1)
+    // XZR = -2 => X21 < X23 => pos < (final - 1)
+    SUBS XZR, X21, X23
+    B.GT Done
+
+    // int q = a[i - 1]
+    SUBI X10, X23, #1
+    LSL X10, X10, #3
+    ADD X10, X19, X10
+
+    LDUR X10, [X10, #0]
+
+    // a[i] = q
+    LSL X12, X23, #3
+    ADD X12, X19, X12
+    STUR X10, [X12, #0]
+
+    // X10 = i * 8
+    // LSL X10, X23, #3
+    // X10 = X19 + X10
+    // ADD X10, X19, X10
+
+    // // int tmp = a[i];
+    // LDUR X9, [X10, #0]
+    // // a[i + 1] = tmp
+    // STUR X9, [X10, #8]
+
+    // i--;
+    SUBI X23, X23, #1
+
+    B ShiftRightLoop
+
+Done:
+    // a[0] = X11
+    STUR X11, [X19, #0]
+    DUMP
+
+Exit:
+    DUMP

@@ -1,0 +1,23 @@
+Name: Tyler Jaacks
+Email: tjaacks@iastate.edu
+NetID: tjaacks
+
+HW1 - InsertionSort
+
+File(s): README, hw1.legv8asm
+
+Routine(s) of Importance: 
+	Main - Fills the Array with values you might want to remove this
+	so that you can use your test harness.
+	
+	InsertionSort - The Insertion Sort routine runs the insertion sort. 
+	It use the the X0 register to store the base address of the array,
+	and the X1 to store the size of the array.
+
+	InsertSortedPos
+
+	ShiftRight
+
+	
+
+	
