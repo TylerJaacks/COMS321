@@ -14,7 +14,7 @@ Main:
     ADDI X9, XZR, #2
     STUR X9, [X19, #24]
 
-    SUBI SP, SP, #512
+    SUBI SP, SP, #8192
 
     // addr
     STUR X0, [SP, #0]
@@ -26,7 +26,7 @@ Main:
     LDUR X1, [SP, #8]
     LDUR X0, [SP, #0]
     
-    ADDI SP, SP, #512 
+    ADDI SP, SP, #8192
     B Exit
 // addr -> X0
 // length -> X1
@@ -42,7 +42,7 @@ InsertionSort:
         SUBS XZR, X23, X10
         B.GT InsertionSortDone
 
-        // TODO InsertSortedPos(addr, i, length-1)
+        // InsertSortedPos(addr, i, length-1)
         STUR X23, [SP, #32]
         STUR X10, [SP, #64]
         STUR LR, [SP, #128]
@@ -61,52 +61,86 @@ InsertionSortDone:
 // X23 -> i
 // X10 -> length - 1
 InsertSortedPos:
-    // v = addr[pos]
-    // LSL X10, X20, #3
-    // ADD X10, X19, X20
-    // LDUR X11, [X10, #0]
+    // v = addr[pos];
+    LSL X9, X23, #3
+    ADD X9, X0, X9
+    LDUR X9, [X9, #0]
 
-    // p = FindSortedPos(addr, v, final)
-    // ShiftRight(addr, p, pos)
-    // addr(p) = v
+    // FindSortedPos(addr, v, final)
+    // pos = X23
+    STUR LR, [SP, #256]
+    STUR X9, [SP, #512]
+    BL FindSortedPos
+    LDUR X9, [SP, #512]
+    LDUR LR, [SP, #256]
+
+    // p = X24
+    // ShiftRight(X0, X24, X23)
+    STUR LR, [SP, #1024]
+    BL ShiftRight
+    LDUR LR, [SP, #1024]
 
     BR LR
+FindSortedPos:
+    // int i = 0;
+    ADDI X24, XZR, #0
+
+    FindSortedPosLoop:
+        SUBS XZR, X24, X10
+        B.LT FindSortedPosDone
+
+        LSL X11, X24, #3
+        ADD X11, X0, X11
+        LDUR X11, [X11, #0]
+
+        SUBS XZR, X11, X9
+        B.GE FindSortedPosDone
+
+        ADDI X24, X24, #1
+
+        B FindSortedPosLoop
+    FindSortedPosDone:
+        BR LR
+
 // X19 -> Array Starting Address.
 // X20 -> Size of Array.
 // X21 -> Position of the Item.
 // X22 -> Final Position.
+
+// ShiftRight(addr, pos final)
+// ShiftRight(X0, X24, X23)
 ShiftRight:
     // int i = final - 1;
-    SUBI X23, X22, #1
+    SUBI X23, X23, #1
 
     // X11 = a[final - 1]
     LSL X11, X23, #3
     LDUR X11, [X11, #0]
 
 ShiftRightLoop:
-    // XZR = X21 - X23
+    // XZR = X24 - X23
     // XZR = pos - (final - 1)
     // XZR = 1 - (4 - 1)
-    // XZR = -2 => X21 < X23 => pos < (final - 1)
-    SUBS XZR, X21, X23
+    // XZR = -2 => X24 < X23 => pos < (final - 1)
+    SUBS XZR, X24, X23
     B.GT Done
 
     // int q = a[i - 1]
     SUBI X10, X23, #1
     LSL X10, X10, #3
-    ADD X10, X19, X10
+    ADD X10, X0, X10
 
     LDUR X10, [X10, #0]
 
     // a[i] = q
     LSL X12, X23, #3
-    ADD X12, X19, X12
+    ADD X12, X0, X12
     STUR X10, [X12, #0]
 
     // X10 = i * 8
     // LSL X10, X23, #3
-    // X10 = X19 + X10
-    // ADD X10, X19, X10
+    // X10 = X0 + X10
+    // ADD X10, X0, X10
 
     // // int tmp = a[i];
     // LDUR X9, [X10, #0]
@@ -120,7 +154,7 @@ ShiftRightLoop:
 
 Done:
     // a[0] = X11
-    STUR X11, [X19, #0]
+    STUR X11, [X0, #0]
     DUMP
 
 Exit:
