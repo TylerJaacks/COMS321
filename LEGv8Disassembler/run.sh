@@ -1,1 +1,1 @@
-java -cp hw2.jar com.tylerj.LEGv8Disassembler.Main
+java -jar hw2.jar -file

@@ -19,7 +19,7 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
     manifest {
-        attributes 'Main-Class': 'org.Lol'
+        attributes 'Main-Class': 'org.tylerj.LEGv8Disassembler.Main'
     }
 }
 
