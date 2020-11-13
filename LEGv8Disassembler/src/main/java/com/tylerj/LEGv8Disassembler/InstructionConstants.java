@@ -51,8 +51,8 @@ public class InstructionConstants {
     public static final int CBNZ   = 0b10110101_00000000_00000000_00000000;
     public static final int CBZ    = 0b10110100_00000000_00000000_00000000;
 
-    public static int B_EQ;
-    public static int B_NE;
+    public static final int B_EQ   = 0b11101011_00000000_00000000_00000000;
+    public static final int B_NE   = 0b11101011_10000000_00000000_00000000;
     public static int B_NS;
     public static int B_LO;
     public static int B_MI;

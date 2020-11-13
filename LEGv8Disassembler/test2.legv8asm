@@ -1,0 +1,6 @@
+smallest_loop1:
+SUBS X11, X10, X1
+B.EQ smallest_loop
+smallest_loop2:
+SUBS X11, X10, X1
+B.NE smallest_loop

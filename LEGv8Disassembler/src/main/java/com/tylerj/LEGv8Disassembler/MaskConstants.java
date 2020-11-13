@@ -13,7 +13,7 @@ public class MaskConstants {
     public static final int RD_MASK =    0b00000000_00000000_00000000_00011111;
 
     // TODO Doesn't work
-    public static final int ALU_IMMEDIATE_MASK = 0b00000000_00011111_11111000_00000000;
+    public static final int ALU_IMMEDIATE_MASK = 0b00000000_00011111_1111110_00000000;
 
     // TODO Doesn't work
     public static final int BR_ADDRESS_MASK = 0b00000011_11111111_11111111_11111111;
