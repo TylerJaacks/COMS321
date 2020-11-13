@@ -15,12 +15,8 @@ public class Main {
 
             System.exit(0);
         } else {
-            System.out.println("Disassembling " + filePath + ".\n");
-
             Disassembler.disassemble(programBytes);
         }
-
-        System.out.println("Exiting");
     }
 
     public static void verifyProgramArguments(String[] args) {

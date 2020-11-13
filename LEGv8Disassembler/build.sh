@@ -1,3 +1,6 @@
-echo "Starting LEGv8Disassembler Build using Gradle..."
+./gradlew build
+./gradlew fatJar
 
-bash ./gradlew build
+cp build/libs/LEGv8Disassembler-all-1.0.jar hw2.jar
+
+java -cp hw2.jar com.tylerj.LEGv8Disassembler.Main
