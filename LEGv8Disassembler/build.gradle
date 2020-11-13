@@ -6,6 +6,9 @@ plugins {
 group 'com.tylerj.LEGv8Disassembler'
 version '1.0'
 
+sourceCompatibility = 1.14
+targetCompatibility = 1.14
+
 repositories {
     mavenCentral()
 }
@@ -19,12 +22,6 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
     manifest {
-        attributes 'Main-Class': 'org.tylerj.LEGv8Disassembler.Main'
+        attributes 'Main-Class': 'com.tylerj.LEGv8Disassembler.Main'
     }
-}
-
-task runFatJar(type: JavaExec) {
-    dependsOn fatJar
-    classpath = fatJar.outputs.files
-    main = 'com.tylerj.LEGv8Disassembler.Main'
 }
