@@ -1,0 +1,6 @@
+Run the build.sh script to build the program. Then use the run.sh script -file and the path to the file.
+
+Example:
+
+$ ./build.sh
+$ ./run.sh -file test.legv8asm.machine
