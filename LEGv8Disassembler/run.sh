@@ -1,1 +1,1 @@
-java -jar hw2.jar -file
+java -jar hw2.jar -file test.legv8asm.machine

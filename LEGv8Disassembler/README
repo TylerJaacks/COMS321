@@ -1,6 +1,9 @@
-Run the build.sh script to build the program. Then use the java -cp command from the example script -file and the path to the file.
+1. Run the build.sh script to build the program.
+2. Modify the run.sh to change the file you wish to disassemble.
+3. Run the run.sh
 
 Example:
 
 $ ./build.sh
-$ java -cp hw2.jar com.tylerj.LEGv8Disassembler.Main -file test.legv8asm.machine
+$ vim run.sh # Change the filename
+$ ./run.sh
