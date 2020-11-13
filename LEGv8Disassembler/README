@@ -1,6 +1,6 @@
-Run the build.sh script to build the program. Then use the run.sh script -file and the path to the file.
+Run the build.sh script to build the program. Then use the java -cp command from the example script -file and the path to the file.
 
 Example:
 
 $ ./build.sh
-$ ./run.sh -file test.legv8asm.machine
+$ java -cp hw2.jar com.tylerj.LEGv8Disassembler.Main -file test.legv8asm.machine
