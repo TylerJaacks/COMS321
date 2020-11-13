@@ -3,11 +3,11 @@ ADDI X10, XZR, #512
 ADD X11, XZR, XZR
 start_init:
 SUB X12, X10, XZR
-CBZ X12, end_init
+CBZ X12, end_init // Wrong
 STUR X10, [X11, #0]
-SUBI X10, X10, #1
+SUBI X10, X10, #1 // This is wrong
 ADDI X11, X11, #8
-B start_init
+B start_init // Not there
 end_init:
 ADD X0, XZR, XZR
 PRNT X0
@@ -22,10 +22,10 @@ STUR X9, [X1, #0]
 BR LR
 find_smallest:
 ADD X9, XZR, XZR
-ADDI X10, XZR, #1
+ADDI X10, XZR, #1 // Wrong
 smallest_loop:
 SUBS X11, X10, X1
-B.EQ end_smallest_loop
+B.EQ end_smallest_loop // Missing
 LSL X12, X9, #3
 ADD X12, X12, X0
 LSL X13, X10, #3
@@ -60,9 +60,9 @@ LSL X0, X0, #3
 ADD X1, X21, X0
 ADD X0, X21, XZR
 BL swap
-LDUR X1, [SP, #16]
-LDUR X0, [SP, #8]
-ADDI X19, X19, #1
+LDUR X1, [SP, #16] // Wrong
+LDUR X0, [SP, #8] // Wrong
+ADDI X19, X19, #1 // Wrong
 B selection_loop
 end_selection_loop:
 LDUR LR, [SP, #0]

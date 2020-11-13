@@ -41,7 +41,7 @@ public class InstructionConstants {
     public static final int PRNL   = 0b11111111_10000000_00000000_00000000;
     public static final int HALT   = 0b11111111_11100000_00000000_00000000;
 
-    public static final int B1     = 0b10100000_00000000_00000000_00000000;
+    public static final int B1     = 0b00010100_00000000_00000000_00000000;
     public static final int B2     = 0b10111111_00000000_00000000_00000000;
 
     public static final int BR     = 0b11010110_00000000_00000000_00000000;

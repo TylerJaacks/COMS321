@@ -1,9 +1,14 @@
 package com.tylerj.LEGv8Disassembler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.tylerj.LEGv8Disassembler.InstructionConstants.*;
 
 public class Disassembler {
     public static void disassemble(byte[] bytes) {
+        List<Integer> integerList = new ArrayList<>();
+
         for (int i = 3; i < bytes.length; i += 4)
         {
             int i1 = Byte.toUnsignedInt(bytes[i - 3]);
@@ -16,6 +21,8 @@ public class Disassembler {
             instruction |= (i3 << 8);
             instruction |= (i2 << 16);
             instruction |= (i1 << 24);
+
+            integerList.add(instruction);
 
             // TODO MUL Instruction
             switch (instruction & MaskConstants.R_TYPE_OPCODE_MASK)
@@ -226,12 +233,12 @@ public class Disassembler {
 
                     System.out.printf("B #%s\n", b1BranchLocation);
                     break;
-
                 case BL1:
                 case BL2:
                     int blBranchLocation = (instruction & MaskConstants.BR_ADDRESS_MASK);
 
                     System.out.printf("BL #%s\n", blBranchLocation);
+                    break;
             }
 
             // TODO DT_ADDRESS is wrong.
@@ -265,6 +272,25 @@ public class Disassembler {
 
             switch (instruction & MaskConstants.CB_TYPE_OPCODE_MASK)
             {
+                case(InstructionConstants.CBNZ):
+                    int cbnzRt = (instruction & MaskConstants.RT_MASK);
+                    int cbnzCondBrAddress = (instruction & MaskConstants.COND_BR_ADDRESS_MASK);
+
+                    String cbnzRnRdRegister = RegistersUtils.getRegisterMap().get(cbnzRt);
+
+
+                    System.out.printf("CBNZ %s #%s\n", cbnzRnRdRegister, cbnzCondBrAddress);
+                    break;
+                case(InstructionConstants.CBZ):
+                    int cbzRt = (instruction & MaskConstants.RT_MASK);
+                    int cbzCondBrAddress = (instruction & MaskConstants.COND_BR_ADDRESS_MASK);
+
+                    String cbzRnRdRegister = RegistersUtils.getRegisterMap().get(cbzRt);
+
+
+                    System.out.printf("CBZ %s #%s\n", cbzRnRdRegister, cbzCondBrAddress);
+                    break;
+
 //                case(InstructionConstants.B_EQ):
 //                    break;
 //                case(InstructionConstants.B_NE):
@@ -293,12 +319,10 @@ public class Disassembler {
 //                    break;
 //                case(InstructionConstants.B_LE):
 //                    break;
-//                case(InstructionConstants.CBNZ):
-//                    break;
-//                case(InstructionConstants.CBZ):
-//                    break;
+
             }
         }
 
+        System.out.println("Test");
     }
 }
