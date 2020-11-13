@@ -322,7 +322,5 @@ public class Disassembler {
 
             }
         }
-
-        System.out.println("Test");
     }
 }
