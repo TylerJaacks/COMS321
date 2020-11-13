@@ -1,0 +1,72 @@
+main:
+ADDI X10, XZR, #512
+ADD X11, XZR, XZR
+start_init:
+SUB X12, X10, XZR
+CBZ X12, end_init
+STUR X10, [X11, #0]
+SUBI X10, X10, #1
+ADDI X11, X11, #8
+B start_init
+end_init:
+ADD X0, XZR, XZR
+PRNT X0
+ADDI X1, XZR, #512
+BL selection_sort
+B done
+swap:
+LDUR X9, [X0, #0]
+LDUR X10, [X1, #0]
+STUR X10, [X0, #0]
+STUR X9, [X1, #0]
+BR LR
+find_smallest:
+ADD X9, XZR, XZR
+ADDI X10, XZR, #1
+smallest_loop:
+SUBS X11, X10, X1
+B.EQ end_smallest_loop
+LSL X12, X9, #3
+ADD X12, X12, X0
+LSL X13, X10, #3
+ADD X13, X13, X0
+LDUR X14, [X12, #0]
+LDUR X15, [X13, #0]
+SUBS X11, X15, X14
+B.GE no_adjustment
+ADD X9, XZR, X10
+no_adjustment:
+ADDI X10, X10, #1
+B smallest_loop
+end_smallest_loop:
+ADD X0, XZR, X9
+BR LR
+selection_sort:
+SUBI SP, SP, #24
+STUR LR, [SP, #0]
+STUR X0, [SP, #8]
+STUR X1, [SP, #16]
+ADD X19, XZR, XZR
+SUBI X20, X1, #1
+selection_loop:
+SUBS X9, X19, X20
+B.EQ end_selection_loop
+LSL X9, X19, #3
+ADD X0, X0, X9
+ADD X21, X0, XZR
+SUB X1, X1, X19
+BL find_smallest
+LSL X0, X0, #3
+ADD X1, X21, X0
+ADD X0, X21, XZR
+BL swap
+LDUR X1, [SP, #16]
+LDUR X0, [SP, #8]
+ADDI X19, X19, #1
+B selection_loop
+end_selection_loop:
+LDUR LR, [SP, #0]
+ADDI SP, SP, #24
+BR LR
+done:
+DUMP
